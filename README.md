@@ -1,4 +1,4 @@
-![azure-application-gateway](https://user-images.githubusercontent.com/67486994/121694847-69a7c180-cac2-11eb-8c5e-fe226fd3033a.png)
+
 # Azure Application Gateway
 Azure application gateway terraform code
 
@@ -291,6 +291,6 @@ Azure application gateway terraform code
 
   terraform plan
 
-  ```
+ 
 
 ![azure-application-gateway](https://user-images.githubusercontent.com/67486994/121694847-69a7c180-cac2-11eb-8c5e-fe226fd3033a.png)
