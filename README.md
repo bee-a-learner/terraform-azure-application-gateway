@@ -4,7 +4,7 @@ Azure application gateway terraform code
 
 
   #---------------------------------------------------------
-  # APPGW
+  ## Application gateway parameter sample
   #---------------------------------------------------------
 
     ### application gateway resource group name
