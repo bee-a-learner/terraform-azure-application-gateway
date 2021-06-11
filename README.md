@@ -292,4 +292,6 @@ Azure application gateway terraform code
 
   ```
 
+ ![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+
   [terraform plan result](.\azure-application-gateway.png)
