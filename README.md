@@ -1,4 +1,4 @@
-![azure-application-gateway](https://user-images.githubusercontent.com/67486994/121694847-69a7c180-cac2-11eb-8c5e-fe226fd3033a.png)
+
 # Azure Application Gateway
 Azure application gateway terraform code
 
@@ -293,6 +293,4 @@ Azure application gateway terraform code
 
   ```
 
- ![alt text](https://www.causevox.com/wp-content/uploads/2011/05/logo-finished-1280x720.png)
-
-  [terraform plan result](.\azure-application-gateway.png)
+![azure-application-gateway](https://user-images.githubusercontent.com/67486994/121694847-69a7c180-cac2-11eb-8c5e-fe226fd3033a.png)
