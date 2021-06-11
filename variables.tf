@@ -3,18 +3,6 @@
 # RESOURCE GROUP
 #---------------------------------------------------------
 
-variable "public_ip_name" {
-  default = ""
-}
-
-variable "public_ip_allocation_method" {
-  default = ""
-}
-
-variable "public_ip_sku" {
-  default = ""
-}
-
 variable "tags" {
     description = "(optional) describe your variable"
     default = {}
@@ -75,10 +63,6 @@ variable "ssl_policy" {
   default = []
 }
 
-variable "requires_identity" {
-    type    = bool
-    default = true
-}
 
 variable "user_managed_identity" {
    description    = "(optional) user manage identity Id, requires if 'requires_identity' field set to true"
@@ -87,18 +71,6 @@ variable "user_managed_identity" {
 
 variable "probe" {
   description = "(required) list of application gateway probe"
-}
-
-variable "use_probe_matching_conditions" {
-  type = bool
-  description = "(optional) set if gateway probe wants to use probe matching condition, in this case you need to provde value in 'http_response_status_codes' variable"
-  default = false
-}
-
-variable "http_response_status_codes" {
-  type = list
-  description = "(optional) set if gateway probe wants to use probe matching condition, if requires to use then 'use_probe_matching_conditions' must be set to true"
-  default = []
 }
 
 variable "request_routing_rule" {
@@ -111,8 +83,14 @@ variable "url_path_maps" {
   description = "(optional) One or more url_path_map blocks"
 }
 
-variable "sku" {
-  description = "(required) applicatin gateway sku"
+variable "sku_name" {
+  type  = string 
+  description = "(required) applicatin gateway sku name"
+}
+
+variable "sku_tier" {
+  type  = string 
+  description = "application gateway sku tier"
 }
 
 variable "ssl_certificate" {
@@ -135,16 +113,12 @@ variable "waf_configuration" {
   default = []
 }
 
-
 variable "firewall_policy_id" {
   default = ""
+  description = "firewall policy Id which can be associated with app gateway"
 }
 
 variable "rewrite_rule_set" {
   default = null
-}
-#
-variable "frontend_ip_configuration_name" {
-  default = ""
-  description = "(optional) application gateway frontend ip configuration, if not provided default name would be [app gateway name]-ip "
+  description = "collection of rule set id"
 }
