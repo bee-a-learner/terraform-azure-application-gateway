@@ -284,7 +284,7 @@ Azure application gateway terraform code
         }
 
 
-  `` 
+
 
   terraform init
 
