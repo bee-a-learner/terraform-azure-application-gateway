@@ -292,6 +292,6 @@ Azure application gateway terraform code
 
   ```
 
- ![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+ ![alt text](https://www.causevox.com/wp-content/uploads/2011/05/logo-finished-1280x720.png)
 
   [terraform plan result](.\azure-application-gateway.png)
