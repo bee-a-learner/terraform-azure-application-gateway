@@ -110,7 +110,9 @@
             name      = "appgwipcfg"
 
             ### gateway ip configuration subnet name
-            subnet_id = "/subscriptions/[subscriptionid]/resourceGroups/[resource_group_name]/providers/Microsoft.Network/virtualNetworks/[vnet_name]/subnets/[subnet_name]"
+            #TODO://
+            #subnet_id = "/subscriptions/[subscriptionid]/resourceGroups/[resource_group_name]/providers/Microsoft.Network/virtualNetworks/[vnet_name]/subnets/[subnet_name]"
+          
         }
     ]
 
@@ -173,7 +175,10 @@
     # User manage identity this is requires if app gateway certificate requires to manage from keyvault, 
     #[NOTE] :: user manage identity must have get certificate/secret access to the keyvault where the certificates are stored
 
-    user_managed_identity = ["/subscriptions/[subscriptionsId]/resourceGroups/[resourceGroups_id]/providers/Microsoft.ManagedIdentity/userAssignedIdentities/[identity_name]"]
+    user_managed_identity = [
+         #TODO://
+        #"/subscriptions/[subscriptionsId]/resourceGroups/[resourceGroups_id]/providers/Microsoft.ManagedIdentity/userAssignedIdentities/[identity_name]"
+        ]
 
     # (optional) list application gateway probe
 
@@ -248,8 +253,8 @@
     ssl_certificate = [ 
     {
         name                            = "wild-card-cert"
-        keyvault_certificate_secret_id  = "https://[keyvault].vault.azure.net/secrets/[secret_name]/secret_id"
-       
+        #TODO://
+        #keyvault_certificate_secret_id  = "https://[keyvault].vault.azure.net/secrets/[secret_name]/secret_id"
     }]
 
     trusted_root_certificate = [ 

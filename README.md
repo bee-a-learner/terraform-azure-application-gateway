@@ -282,3 +282,14 @@ Azure application gateway terraform code
             Resource_Type       = "Application"
             Data_Classification = "Standard"
         }
+
+
+  `` 
+
+  terraform init
+
+  terraform plan
+
+  ```
+
+  [terraform plan result](.\azure-application-gateway.png)
