@@ -1,124 +1,285 @@
-
-#---------------------------------------------------------
-# RESOURCE GROUP
-#---------------------------------------------------------
-
-variable "tags" {
-    description = "(optional) describe your variable"
-    default = {}
-}
-
-variable "application_gateway_name" {
-    type = string
-    description = "(optional) describe your variable"
-    default = "appgateway-dev-01"
-}
-variable "location" {
-    type = string
-    description = "(optional) describe your variable"
-    default = "westeurope"
-}
-variable "resource_group_name" {
-    type = string
-    description = "(optional) describe your variable"
-    default = "rg-appgateway-dev-01"
-}
-
-#---------------------------------------------------------
-# APPGW
-#---------------------------------------------------------
-variable "backend_address_pool" {
-  description = "list of application gateway backend pool"
-}
-	
-variable "backend_http_settings" {
-  description = "list of application gateway backend http settings"
-}
-
-variable "frontend_port" {
-  description = "list of application gateway frontend port"
-  
-}
-
-variable "frontend_ip_configuration" {
-   default = []
-   description = "list of frontend ip configuration"
-}
-
-variable "gateway_ip_configuration" {
-  description = "list of application gateway ip configuration"
-}
-
-variable "autoscale_configuration" {
-  description = "list of autoscale configuration"
-}	
-	
-variable "http_listener" {
-    default = "list of http listener configuration"
-}
+# Azure Application Gateway
+#Azure application gateway terraform code
 
 
-variable "ssl_policy" {
-  description = "(optional) define TLS settings if requires"
-  default = []
-}
+  #---------------------------------------------------------
+  # APPGW
+  #---------------------------------------------------------
+
+    ### application gateway resource group name
+    resource_group_name = "rg-appgateway-dev"
+
+    ### application gateway location
+    location            = "westeurope"
+
+    ### application gateway name
+    name                    = "dev-app-gateway"
+    
+    public_ip_allocation_method   = "Static"
+    public_ip_sku                 = "Standard"
+    public_ip_name                = "appgateway-pip"
 
 
-variable "user_managed_identity" {
-   description    = "(optional) user manage identity Id, requires if 'requires_identity' field set to true"
-   type           = list
-}
+    ### list of application gateway backend pool
 
-variable "probe" {
-  description = "(required) list of application gateway probe"
-}
+    
+    backend_address_pool    = [
+            {
+                #### backend pool ip address
+                ip_addresses = [
+                    "10.238.0.165",
+                ]
 
-variable "request_routing_rule" {
-  default = []
-  description = "(optional) list of application gateway routing rule"
-}
+                #### backend pool name
+                name         = "apim-be-pool"
+            },
+            {
+                ip_addresses = []
+                name         = "sinkpool"
+            }
+        ]
 
-variable "url_path_maps" {
-  default = []
-  description = "(optional) One or more url_path_map blocks"
-}
+    
 
-variable "sku_name" {
-  type  = string 
-  description = "(required) applicatin gateway sku name"
-}
 
-variable "sku_tier" {
-  type  = string 
-  description = "application gateway sku tier"
-}
+    ### list of application gateway http settings
 
-variable "ssl_certificate" {
-   description = "(required) list applicatin gateway ssl_certificate"
-}
-#
+    
 
-variable "authentication_certificate" {
-  description = "(optional) list applicatin gateway authentication_certificate"
-  default = []
-}
+    backend_http_settings = [ 
+        {
+            # (Optional) cookie_based_affinity 
+            cookie_based_affinity               = "Disabled"
 
-variable "trusted_root_certificate" {
-  description = "(optional) list applicatin gateway trusted_root_certificate"
-  default = []
-}
+            # (Optional) set true if host name provided 
+            pick_host_name_from_backend_address = false
 
-variable "waf_configuration" {
-  description = "(required) list applicatin gateway waf_configuration"
-  default = []
-}
+            # (Optional) host name    
+            host_name                           = "dev-portal.contoso.com"
 
-variable "firewall_policy_id" {
-  default = ""
-  description = "firewall policy Id which can be associated with app gateway"
-}
+            # (required) http settings name
+            name                                = "portal-http-setting"
+            
+            # (required) http settings port default port is 443
+            port                                = 443
 
-variable "rewrite_rule_set" {
-  default = null
-  description = "collection of rule set id"
-}
+            # (required) http settings probe name (must match the probe name which is set below)
+            probe_name                          = "portal-probe"
+
+            # (Optional) protocol name default is Https    
+            protocol                            = "Https"
+
+            # (Optional) request timeout default is 20    
+            request_timeout                     = 180
+
+            # (Optional) list(string) of trusted root certificate, must match with list of trusted_root_certificate defined below    
+            trusted_root_certificate_names      = [
+                        "wild-card-cert"
+                ]
+
+            # (Optional) list(string) of authentication certificate, must match with list of authentication_certificate defined below    
+             authentication_certificate =[]
+        }
+    ]
+
+    
+
+    ### application gateway frontend port
+
+    
+    # (Optional) list of frontend port    
+    frontend_port =[
+
+        {
+            #### (Optional) list of frontend port name   
+            name = "frontend-ip-port-443"
+
+            #### (Optional) list of frontend port
+            port = 443
+        }
+    ]
+
+    
+
+    #application gateway ip configuration
+	gateway_ip_configuration = [
+        {
+            ### gateway ip configuration name
+            name      = "appgwipcfg"
+
+            ### gateway ip configuration subnet name
+            #TODO://
+            subnet_id = "/subscriptions/[subscriptionid]/resourceGroups/[resource_group_name]/providers/Microsoft.Network/virtualNetworks/[vnet_name]/subnets/[subnet_name]"
+          
+        }
+    ]
+
+    
+
+    #(optional) application gateway ip configuration
+
+    autoscale_configuration =  [
+        {
+            max_capacity = 5
+            min_capacity = 0
+        }
+    ]
+
+    #(optional) application gateway ssl policy
+    
+    ssl_policy  = [
+        {
+            policy_type    = "Predefined"
+            policy_name    = "AppGwSslPolicy20170401S"
+        }
+    ]
+
+    # (Required) list of application gateway http listner block
+
+    
+    http_listener=[ 
+            {
+                # (requires) application gateway configuration name
+                frontend_ip_configuration_name  = "dev-app-gateway-pip"
+
+                # (requires) application gateway port name
+
+                frontend_port_name              = "frontend-ip-port-443"
+
+                # (optional) list of application gateway one or more host name
+                host_names                      = []
+
+                # (optional) application gateway one or more host name
+                host_name                       = "dev-api.contoso.com"
+
+                # (optional) application gateway http_listener name
+                name                            = "api-listener"
+
+                # (optional) application gateway portocol
+                protocol                        = "Https"
+
+                # (optional) application gateway requires_sni, default false
+                require_sni                     = true
+
+                # (optional) application gateway ssl_certificate_name, should match from the list of ssl cert
+                ssl_certificate_name            = "wild-card-ssl"
+
+                #firewall_policy_id              ="/subscriptions/[subscriptionsId]/resourceGroups/[resourceGroups_name]/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies/[policy_name]"
+            }
+        ]
+
+    
+
+    # User manage identity this is requires if app gateway certificate requires to manage from keyvault, 
+    #[NOTE] :: user manage identity must have get certificate/secret access to the keyvault where the certificates are stored
+
+    user_managed_identity = [
+         #TODO://
+        #"/subscriptions/[subscriptionsId]/resourceGroups/[resourceGroups_id]/providers/Microsoft.ManagedIdentity/userAssignedIdentities/[identity_name]"
+        ]
+
+    # (optional) list application gateway probe
+
+    
+    probe = [
+                {
+                    # (reuqires) host
+                    host                                      = "dev-api.contoso.com"
+                    # (reuqires) probe name
+                    name                                      = "api-probe"
+
+                    # (reuqires) probe path
+                    path                                      = "/status-0123456789abcdef"
+
+                    # (optional) probe protocol default is Https
+                    protocol                                  = "Https"
+
+                    # (option) probe matching condition, default is false
+                    use_probe_matching_conditions             = true
+
+                    # (option) if use_probe_matching_conditions set to true the status_codes, list requires
+                    http_response_status_codes                = ["200-399"]
+                }
+        ]
+
+    
+    # application gateway routing rules collection
+
+    request_routing_rule = [ 
+            {
+                # http listener name
+                http_listener_name         = "api-listener"
+                name                       = "api-rule"
+                rule_type                  = "PathBasedRouting",
+                url_path_map_name          = "api-rule-path-map"
+            },
+            {
+                backend_address_pool_name  = "apim-be-pool"
+                backend_http_settings_name = "management-http-setting"
+                http_listener_name         = "management-listener"
+                name                       = "management-rule"
+                rule_type                  = "Basic"
+            }
+        ]
+
+    url_path_map = [
+        
+        {
+            backend_address_pool_name                       = "sinkpool"
+            backend_http_settings_name                      = "api-http-setting"
+            name                                            = "api-rule-path-map"
+            path_rules =[
+                            {
+                                backend_address_pool_name   = "apim-be-pool"
+                                backend_http_settings_name  = "api-http-setting"
+                                name                        = "external"
+                                paths                       = [
+                                    "/external/*",
+                                ]
+                            }
+                        ]   
+        }
+        
+    ]
+
+    sku_name     = "WAF_v2"
+    sku_tier     = "WAF_v2"
+
+    ssl_certificate = [ 
+    {
+        name                            = "wild-card-cert"
+        #TODO://
+        #keyvault_certificate_secret_id  = "https://[keyvault].vault.azure.net/secrets/[secret_name]/secret_id"
+    }]
+
+    trusted_root_certificate = [ 
+        #  { 
+        #     certificate_name                            = "wild-card-authentication-cert"
+        #     certificate_key                             = "wildcard-cert"
+        #     certificate_key_vault_name                  = "keyvault_name"
+        #     certificate_key_vault_resource_group_name   = "keyvault_resource_group_name"
+        # }
+    ]
+
+    authentication_certificate = [
+       
+    ]
+
+    waf_configuration = [
+         {
+            enabled                  = true
+            file_upload_limit_mb     = 100
+            firewall_mode            = "Detection"
+            max_request_body_size_kb = 128
+            request_body_check       = true
+            rule_set_type            = "OWASP"
+            rule_set_version         = "3.1"
+        }
+    ]
+
+
+    #  Tags 
+     tag = {
+            Resource_Type       = "Application"
+            Data_Classification = "Standard"
+        }
