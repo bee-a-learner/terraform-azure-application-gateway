@@ -38,12 +38,12 @@ data "azurerm_key_vault_certificate" "trusted_cert" {
 
 # Public Ip
 resource "azurerm_public_ip" "appgw_public_ip" {
-  name                = var.public_ip_name
+  name                = format("%s-pip",var.application_gateway_name)
   resource_group_name = var.resource_group_name
   location            = var.location
-
-  allocation_method   = var.public_ip_allocation_method
-  sku                 = var.public_ip_sku
+  
+  allocation_method   = var.sku_tier == "Standard" ? "Dynamic" : "Static"
+  sku                 = var.sku_tier == "Standard" ? "Basic" : "Standard"
 
   tags = var.tags
 }
@@ -57,13 +57,11 @@ resource "azurerm_application_gateway" "app_gateway" {
   location            = var.location
   
   # app gateway SKU
-  dynamic "sku"  {
-    for_each = var.sku
-      content{
-            name     = sku.value.name
-            tier     = sku.value.tier
+    sku{
+            name     = var.sku_name
+            tier     = var.sku_tier
       }
-  }
+  
   
   # following settings configures firewall policy with application gateway
   firewall_policy_id = var.firewall_policy_id ==""?null : var.firewall_policy_id
@@ -127,7 +125,7 @@ resource "azurerm_application_gateway" "app_gateway" {
 
   # Application gateway Frontend IP configuration
  frontend_ip_configuration  {
-        name                          = var.frontend_ip_configuration_name =="" ? format("%s-%s",var.application_gateway_name,"pip") : var.frontend_ip_configuration_name
+        name                          = format("%s-%s",var.application_gateway_name,"pip") 
         public_ip_address_id          = azurerm_public_ip.appgw_public_ip.id
   }
   
@@ -190,7 +188,7 @@ dynamic "gateway_ip_configuration"  {
 
   # application gateway manage Identity
   dynamic "identity"  {
-      for_each = var.requires_identity==true?[1]:[]
+      for_each = var.user_managed_identity
       content{
          identity_ids = var.user_managed_identity
           type        = "UserAssigned"
