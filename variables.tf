@@ -23,7 +23,7 @@ variable "tags" {
 variable "application_gateway_name" {
     type = string
     description = "(optional) describe your variable"
-    default = "axso-prod-appl-aa-shared-net-appgw"
+    default = "appgateway-dev-01"
 }
 variable "location" {
     type = string
@@ -33,7 +33,7 @@ variable "location" {
 variable "resource_group_name" {
     type = string
     description = "(optional) describe your variable"
-    default = "axso-prod-advanced-analytics-core-network-rg"
+    default = "rg-appgateway-dev-01"
 }
 
 #---------------------------------------------------------

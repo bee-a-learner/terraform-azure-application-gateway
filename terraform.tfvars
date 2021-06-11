@@ -17,7 +17,7 @@
     
     public_ip_allocation_method   = "Static"
     public_ip_sku                 = "Standard"
-    public_ip_name                = "axso-nonprod-appl-forest-dev-pip01"
+    public_ip_name                = "appgateway-pip"
 
 
     ### list of application gateway backend pool
